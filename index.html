@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segundo Parcial - Tomas Mastrapasqua</title>
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+    <div class="spinner" id="spinner">
+        <img src="spinner.gif" class="iSpinner"> 
+    </div>
+    <div>
+        <form id="FrmDatos" class="FrmData">
+            <div id="presentacion">
+                <h1>Formulario Datos</h1>
+            </div>
+            
+            <div class="Filtro">
+                <label for="">Filtrar por:</label>
+                <select  id="filtroTipo" disabled>
+                    <option value="vTodos">Todos</option>
+                    <option value="vProfesional">Profesional</option>
+                    <option value="vFutbolista">Futbolista</option>
+                </select>
+            </div>
+
+            <table>
+                <thead> 
+                <tr>
+                    <td>ID</td>
+                    <td>Nombre</td>
+                    <td>Apellido</td>
+                    <td>Edad</td>
+                    <td>Equipo</td>
+                    <td>Posicion</td>
+                    <td>Catidad Goles</td>
+                    <td>Titulo</td>
+                    <td>Facultad</td>
+                    <td>Año Graduacion</td>
+                </tr>
+            </thead>
+            <tbody id="persona-container">
+                
+            </tbody>
+            </table>
+    
+            <button id="btnAgregar">Agregar</button>
+    
+            </form>
+        </div>
+
+        <div id="FrmABM" class="FrmABM">
+            <form class="FrmABM">
+                <h1 id="titulo-abm">Formulario ABM</h1>
+    
+                <div class="inputs">
+                    
+
+
+                    <input type="number" id="txtId" placeholder="Ingrese su id:" readonly="true">
+                    <input type="text" id="txtNombre" placeholder="Ingrese su nombre:">
+                    <input type="text" id="txtApellido" placeholder="Ingrese su apellido:">
+                    <input type="number" id="txtEdad" placeholder="Ingrese su edad:">
+
+                    <select id="SelectTipo">
+                        <option value="tVacio" selected="selected" disabled="disabled">Seleccione su Tipo</option>
+                        <option value="tFutbolista">Futbolista</option>
+                        <option value="tProfesional">Profesional</option>
+                </select>
+
+                    <input type="text" id="txtEquipo" placeholder="Ingrese su equipo:">
+                    <input type="text" id="txtPosicion" placeholder="Ingrese su posicion:">
+                    <input type="number" id="txtCantidadGoles" placeholder="Ingrese cantidad de goles:">
+                    <input type="text" id="txtTitulo" placeholder="Ingrese su titulo:">
+                    <input type="text" id="txtFacultad" placeholder="Ingrese su facultad:">
+                    <input type="number" id="txtAñoGraduacion" placeholder="Ingrese su año de graduacion:">
+
+                                    
+                    <button id="btnAceptar">Aceptar</button> 
+                    
+                    <button id="btnCancelar">Cancelar</button>
+                </div>
+    
+        <script src="index.js"></script>
+    </body>
+    </html>
