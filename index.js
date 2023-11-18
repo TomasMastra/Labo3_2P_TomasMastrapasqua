@@ -155,7 +155,6 @@ function peticionAlServer()
     })    
 
 }
-//desvinculacion de funcion submit
 
 document.getElementById("FrmABM").addEventListener("submit",e=> {
     e.preventDefault();
@@ -179,31 +178,7 @@ function validarIndex(index)
     return retorno;
 }
 
-/*
-function mostrarCorrespondiente()
-{
-    if(SelectTipo.value == "tAereo")
-    {
-        txtAM.style.display="";
-        txtAutonomia.style.display="";
-        txtCantPue.style.display="none";
-        txtCantRue.style.display="none";
-        
 
-        
-    }else if(SelectTipo.value == "tTerrestre")
-    {
-        txtCantPue.style.display="";
-        txtCantRue.style.display="";
-        txtAM.style.display="none";
-        txtAutonomia.style.display="none";
-        
-    }
-
-}
-
-SelectTipo.addEventListener("change",mostrarCorrespondiente);
-*/
 
 function limpiarCampos() {
     txtEquipo.value = "";
@@ -290,6 +265,8 @@ function DelOrModif(event)
 }
 
 
+
+
 function mostrarPersonas(arrayPersonas) {
     document.getElementById("persona-container").innerHTML = "";
     arrayPersonas.forEach(el => {
@@ -332,7 +309,7 @@ function mostrarFutbolistas(arrayFutbolistas) {
     arrayFutbolistas.forEach(el => {
         let tr = document.createElement("tr");
         tr.setAttribute("id", el.id);
-        tr.classList.add("trFutbolistas"); // Cambiado el nombre de la clase
+        tr.classList.add("trFutbolistas"); 
         tr.innerHTML = `
             <td>${el.id}</td>
             <td>${el.nombre}</td>
@@ -369,7 +346,7 @@ function mostrarProfesionales(arrayProfesionales) {
     arrayProfesionales.forEach(el => {
         let tr = document.createElement("tr");
         tr.setAttribute("id", el.id);
-        tr.classList.add("trProfesionales"); // Cambiado el nombre de la clase
+        tr.classList.add("trProfesionales");
         tr.innerHTML = `
             <td>${el.id}</td>
             <td>${el.nombre}</td>
@@ -401,7 +378,6 @@ function mostrarProfesionales(arrayProfesionales) {
     });
 }
 
-//EVALUA EL FILTRO Y MUESTRA SEGUN CORRESPONDA
 function filtroCorrespondiente() {
     if (document.getElementById("filtroTipo").value == "vTodos") {
         mostrarPersonas(arrayPersonas);
@@ -441,31 +417,7 @@ initConfig();
 
 document.getElementById("btnCancelar").addEventListener("click",initConfig);
 
-/*
-function darDeAlta(persona) {   
-    statusSpinner(true);
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function(){
-        if(xhttp.readyState == 4) {
-            if(xhttp.status == 200 && validarDatos()) {
-                console.log(xhttp.response);
-                statusSpinner(false);
-                const nuevoId = JSON.parse(xhttp.response).id;
-                persona.id = nuevoId;
-                arrayPersonas.push(persona); 
-                initConfig();
-                mostrarPersonas(arrayPersonas);
-            } else {
-                statusSpinner(false);
-                initConfig();
-                alert("Error al dar de alta.");   
-            }
-        }     
-    };
-    xhttp.open("PUT", server, true);
-    xhttp.setRequestHeader('Content-Type' , 'application/json');
-    xhttp.send(JSON.stringify(persona));
-}*/
+
 
 async function darDeAlta(persona) {
     statusSpinner(true);
@@ -489,7 +441,6 @@ async function darDeAlta(persona) {
             throw new Error('Error al dar de alta.');
         }
     } catch (error) {
-        console.error(error);
         alert('Error al dar de alta.');
     } finally {
         statusSpinner(false);
@@ -553,7 +504,7 @@ document.getElementById("btnAceptar").addEventListener("click",function(){
             let futbolista = new Futbolista(0,nombre,apellido,edad,equipo,posicion,cantidadGoles);
             Modificar(futbolista);
             
-        }else if(SelectTipo.value = "tProfesional")
+        }else if(SelectTipo.value == "tProfesional")
         {
             let profesional = new Profesional(0,nombre,apellido,edad,titulo,facultad,añoGraduacion);
             Modificar(profesional);
@@ -565,7 +516,7 @@ document.getElementById("btnAceptar").addEventListener("click",function(){
             let futbolista = new Futbolista(0,nombre,apellido,edad,equipo,posicion,cantidadGoles);
             Eliminar(futbolista);
             
-        }else if(SelectTipo.value = "tProfesional")
+        }else if(SelectTipo.value == "tProfesional")
         {
             let profesional = new Profesional(0,nombre,apellido,edad,titulo,facultad,añoGraduacion);
             Eliminar(profesional);
@@ -573,6 +524,7 @@ document.getElementById("btnAceptar").addEventListener("click",function(){
     }
 
 });
+
 
 document.getElementById("btnAgregar").addEventListener("click", altaConfig);
 
@@ -618,14 +570,14 @@ function Modificar(persona) {
                     mostrarPersonas(arrayPersonas);
                     statusSpinner(false);
 
-                    resolve(); // Resuelve la promesa si la operación es exitosa
+                    resolve(); 
                 } else {
-                    reject("Error al modificar. Verifique la conexión con el servidor."); // Rechaza la promesa en caso de error
+                    reject("Error al modificar. Verifique la conexión con el servidor.");
                 }
             })
             .catch((error) => {
                 console.error(error);
-                reject("Error al modificar. Verifique la conexión con el servidor."); // Rechaza la promesa en caso de error
+                reject("Error al modificar. Verifique la conexión con el servidor.");
             })
             .finally(() => {
                 SelectTipo.disabled = false;
@@ -653,7 +605,7 @@ function BuscarId(id) {
 
 async function Eliminar(persona) {
     let consulta = null;
-	
+
     statusSpinner(true);
 
     try {
@@ -671,11 +623,12 @@ async function Eliminar(persona) {
         });
 
         if (consulta.status == 200) {
-            let index = BuscarId(persona.id);
-            arrayPersonas.splice(index, 1);
+            arrayPersonas = arrayPersonas.filter(p => p.id !== persona.id);
+
+            let filaEliminar = document.getElementById(persona.id);
+            filaEliminar.parentNode.removeChild(filaEliminar);
 
             initConfig();
-            mostrarPersonas(arrayPersonas);
         } else {
             throw new Error('Hubo un problema con la baja. Verifique la conexión con el servidor.');
         }
@@ -688,9 +641,3 @@ async function Eliminar(persona) {
         limpiarCampos();
     }
 }
-
-
-
-
-
-
