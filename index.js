@@ -499,14 +499,14 @@ document.getElementById("btnAceptar").addEventListener("click",function(){
     {
         if(SelectTipo.value == "tFutbolista")
         {
-            let futbolista = new Futbolista(0,nombre,apellido,edad,equipo,posicion,cantidadGoles);
+            let futbolista = new Futbolista(parseInt(txtId.value),nombre,apellido,edad,equipo,posicion,cantidadGoles);
             Modificar(futbolista);
             //initConfig();
 
             
         }else if(SelectTipo.value == "tProfesional")
         {
-            let profesional = new Profesional(0,nombre,apellido,edad,titulo,facultad,añoGraduacion);
+            let profesional = new Profesional(parseInt(txtId.value),nombre,apellido,edad,titulo,facultad,añoGraduacion);
             Modificar(profesional);
             //initConfig();
 
@@ -515,12 +515,12 @@ document.getElementById("btnAceptar").addEventListener("click",function(){
     {
         if(SelectTipo.value == "tFutbolista")
         {
-            let futbolista = new Futbolista(0,nombre,apellido,edad,equipo,posicion,cantidadGoles);
+            let futbolista = new Futbolista(parseInt(txtId.value),nombre,apellido,edad,equipo,posicion,cantidadGoles);
             Eliminar(futbolista);
             
         }else if(SelectTipo.value == "tProfesional")
         {
-            let profesional = new Profesional(0,nombre,apellido,edad,titulo,facultad,añoGraduacion);
+            let profesional = new Profesional(parseInt(txtId.value),nombre,apellido,edad,titulo,facultad,añoGraduacion);
             Eliminar(profesional);
         }
     }
@@ -532,7 +532,8 @@ document.getElementById("btnAgregar").addEventListener("click", altaConfig);
 
 
 function Modificar(persona) {
-    return new Promise((resolve, reject) => {
+    //persona.id = parseInt(txtId.value);
+  return new Promise((resolve, reject) => {
         SelectTipo.disabled = true;
         statusSpinner(true);
 
@@ -551,33 +552,42 @@ function Modificar(persona) {
             .then(async (consulta) => {
                 let response = await consulta.text();
 
-                if (consulta.status === 200 && validarDatos()) {
-                    persona.id = parseInt(txtId.value);
-                    persona.nombre = txtNombre.value;
-                    persona.apellido = txtApellido.value;
-                    persona.edad = parseInt(txtEdad.value);
-                    persona.equipo = txtEquipo.value;
-                    persona.posicion = txtPosicion.value;
-                    persona.cantidadGoles = parseInt(txtCantidadGoles.value);
-                    persona.titulo = txtTitulo.value;
-                    persona.facultad = txtFacultad.value;
-                    persona.añoGraduacion = parseInt(txtAñoGraduacion.value);
+                alert(response);
+                alert(consulta.status);
+                
+                    if (consulta.status == 200 && validarDatos()) {
+                        if(response === "Exito") // lo mismo que no sea 400
+                        {
+                            persona.id = parseInt(txtId.value);
+                            persona.nombre = txtNombre.value;
+                            persona.apellido = txtApellido.value;
+                            persona.edad = parseInt(txtEdad.value);
+                            persona.equipo = txtEquipo.value;
+                            persona.posicion = txtPosicion.value;
+                            persona.cantidadGoles = parseInt(txtCantidadGoles.value);
+                            persona.titulo = txtTitulo.value;
+                            persona.facultad = txtFacultad.value;
+                            persona.añoGraduacion = parseInt(txtAñoGraduacion.value);
 
-                    let id = BuscarId(persona.id);
-                    arrayPersonas.splice(id, 1);
+                            let id = BuscarId(persona.id);
+                            arrayPersonas.splice(id, 1);
 
-                    arrayPersonas.push(persona);
+                            arrayPersonas.push(persona);
 
-                    initConfig();
-                    mostrarPersonas(arrayPersonas);
-                    statusSpinner(false);
+                            initConfig();
+                            mostrarPersonas(arrayPersonas);
+                            statusSpinner(false);
 
-                    resolve(); 
-                } else {
-                    reject("Error al modificar. Verifique la conexión con el servidor.");
-                    initConfig();
+                            resolve(); 
+                        }else{
+                        alert(response);
+                        }
+                    } else {
+                        reject("Error al modificar. Verifique la conexión con el servidor.");
+                        initConfig();
 
-                }
+                    }
+                
             })
             .catch((error) => {
                 console.error(error);
@@ -614,6 +624,8 @@ function BuscarId(id) {
 
 
 async function Eliminar(persona) {
+   // persona.id = parseInt(txtId.value);
+
     let consulta = null;
     
     statusSpinner(true);
@@ -630,16 +642,20 @@ async function Eliminar(persona) {
             referrerPolicy: "no-referrer",
             body: JSON.stringify(persona)
         });
+        let response = await consulta.text();
 
-        if (consulta.status === 200) {
-            let index = BuscarId(parseInt(txtId.value));
+        // validar con response  == Exito
+        if (consulta.status == 200) {
+ 
+                let index = BuscarId(parseInt(txtId.value));
 
-            if(index > -1)
-            {
-                arrayPersonas.splice(index, 1);
-            }else{
-                alert('Hubo un problema con la baja');
-            }
+                if(index > -1)
+                {
+                    arrayPersonas.splice(index, 1);
+                }else{
+                    alert('Hubo un problema con la baja');
+                }
+            
             
             initConfig();
             mostrarPersonas(arrayPersonas);
