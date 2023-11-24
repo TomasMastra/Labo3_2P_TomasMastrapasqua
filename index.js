@@ -252,8 +252,6 @@ function DelOrModif(event)
     
     let indexValido = validarIndex(rowId);
         
-    
-
     if(indexValido != -1)
     {        
         formTitulo.innerText = event.target.value;
@@ -503,11 +501,15 @@ document.getElementById("btnAceptar").addEventListener("click",function(){
         {
             let futbolista = new Futbolista(0,nombre,apellido,edad,equipo,posicion,cantidadGoles);
             Modificar(futbolista);
+            //initConfig();
+
             
         }else if(SelectTipo.value == "tProfesional")
         {
             let profesional = new Profesional(0,nombre,apellido,edad,titulo,facultad,añoGraduacion);
             Modificar(profesional);
+            //initConfig();
+
         }
     }else if(formTitulo.innerText == "Eliminar")
     {
@@ -573,16 +575,24 @@ function Modificar(persona) {
                     resolve(); 
                 } else {
                     reject("Error al modificar. Verifique la conexión con el servidor.");
+                    initConfig();
+
                 }
             })
             .catch((error) => {
                 console.error(error);
                 reject("Error al modificar. Verifique la conexión con el servidor.");
+                alert('Error al MODIFICAR.');
+                initConfig();
+
+
             })
             .finally(() => {
                 SelectTipo.disabled = false;
 
                 statusSpinner(false);
+                initConfig();
+
             });
     });
 }
@@ -605,9 +615,8 @@ function BuscarId(id) {
 
 async function Eliminar(persona) {
     let consulta = null;
-
+    
     statusSpinner(true);
-
     try {
         consulta = await fetch(server, {
             method: "DELETE",
@@ -622,22 +631,29 @@ async function Eliminar(persona) {
             body: JSON.stringify(persona)
         });
 
-        if (consulta.status == 200) {
-            arrayPersonas = arrayPersonas.filter(p => p.id !== persona.id);
+        if (consulta.status === 200) {
+            let index = BuscarId(parseInt(txtId.value));
 
-            let filaEliminar = document.getElementById(persona.id);
-            filaEliminar.parentNode.removeChild(filaEliminar);
-
+            if(index > -1)
+            {
+                arrayPersonas.splice(index, 1);
+            }else{
+                alert('Hubo un problema con la baja');
+            }
+            
             initConfig();
+            mostrarPersonas(arrayPersonas);
         } else {
-            throw new Error('Hubo un problema con la baja. Verifique la conexión con el servidor.');
+            throw new Error('Hubo un problema con la baja. Verifique la conexion con el servidor');
         }
     } catch (error) {
         console.error(error);
-        alert('Hubo un problema con la baja. Verifique la conexión con el servidor.');
+        alert('Hubo un problema con la baja. Verifique la conexion con el servidor');
         initConfig();
     } finally {
         statusSpinner(false);
         limpiarCampos();
     }
 }
+
+
